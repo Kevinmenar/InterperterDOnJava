@@ -1,8 +1,0 @@
-programa test:
-	principal():
-			
-		numero x;
-		x=6;
-		
-	fin
-fin
