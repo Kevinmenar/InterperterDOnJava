@@ -1,0 +1,15 @@
+ImprimirTokens
+programa test:
+	principal():
+	
+	numero x;
+	
+	x = 1+5;
+
+	ciclo x!=0:
+		x = x - 1;
+	fin
+
+
+	fin
+fin

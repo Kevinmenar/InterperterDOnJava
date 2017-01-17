@@ -1,0 +1,25 @@
+ImprimirTokens
+programa test:
+	principal():
+	
+	numero x;
+
+	x=6;
+
+	alternativas x:
+		opcion 1:
+			x=9;
+			salir;
+		opcion 6:
+			x=8;
+			salir;
+		opcion 9:
+ 			x=5;
+			salir;
+		defecto:
+			x=2;
+			salir;
+		fin
+
+	fin
+fin
