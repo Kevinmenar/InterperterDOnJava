@@ -8,7 +8,7 @@ class TokenAsignaciones
 	  //Variable para validar asignaciones a caracteres(ichr)
 	  public static int segunda = 0;
 	  //Tabla que almacenara los tokens declarados
-	  private static Hashtable tabla = new Hashtable();
+	  public static Hashtable tabla = new Hashtable();
 	  
 	  //Listas que guardaran los tipos compatibles de las variables
 	  private static ArrayList<Integer> intComp = new ArrayList();
@@ -32,19 +32,19 @@ class TokenAsignaciones
 		 caracter = chrComp
 		*/
 
-		intComp.add(45);
-		intComp.add(49);
+		intComp.add(47);
+		intComp.add(51);
 		
-		decComp.add(45);
-		decComp.add(46);
-		decComp.add(49);
+		decComp.add(47);
+		decComp.add(48);
 		decComp.add(51);
+		decComp.add(53);
 		
-		chrComp.add(47);
-		chrComp.add(53);
+		chrComp.add(49);
+		chrComp.add(55);
 		
-		strComp.add(48);
-		strComp.add(52);
+		strComp.add(50);
+		strComp.add(54);
 
 	}
  
@@ -57,7 +57,7 @@ class TokenAsignaciones
 								asi como, si el token enviado es diferente a algun tipo que no se declara como los numeros(48), los decimales(50),
 								caracteres(52) y cadenas(51)
 								entonces tipoIdent1 = tipo_de_dato, ya que TokenAsig es un dato*/
-		if(TokenIzq.kind != 49 && TokenIzq.kind != 51)		
+		if(TokenIzq.kind != 51 && TokenIzq.kind != 53)		
 		{
 			try 
 			{
@@ -74,7 +74,7 @@ class TokenAsignaciones
 			tipoIdent1 = 0;
 			
 		//TokenAsig.kind != 48 && TokenAsig.kind != 50 && TokenAsig.kind != 51 && TokenAsig.kind != 52
-		if(TokenAsig.kind == 50)	
+		if(TokenAsig.kind == 52)	
 		{
 			/*Si el tipo de dato que se esta asignando, es algun identificador(kind == 49) 
 			se obtiene su tipo de la tabla de tokens para poder hacer las comparaciones*/
@@ -90,12 +90,12 @@ class TokenAsignaciones
 		}
 				//Si el dato es entero(48) o decimal(50) o caracter(51) o cadena(52)
 				//tipoIdent2 = tipo_del_dato
-		else if(TokenAsig.kind == 49 || TokenAsig.kind == 51 || TokenAsig.kind == 52 || TokenAsig.kind == 53)
+		else if(TokenAsig.kind == 51 || TokenAsig.kind == 53 || TokenAsig.kind == 54 || TokenAsig.kind == 55)
 			tipoIdent2 = TokenAsig.kind;
 		else //Si no, se inicializa en algun valor "sin significado(con respecto a los tokens)", para que la variable este inicializada y no marque error al comparar
 			tipoIdent2 = 0; 
 
-		if(tipoIdent1 == 45) //Int
+		if(tipoIdent1 == 47) //Int
 		{
 			//Si la lista de enteros(intComp) contiene el valor de tipoIdent2, entonces es compatible y se puede hacer la asignacion
 			if(intComp.contains(tipoIdent2))
@@ -103,14 +103,14 @@ class TokenAsignaciones
 			else //Si el tipo de dato no es compatible manda el error
 				return "Error: No se puede convertir " + TokenAsig.image + " a Entero \r\nLinea: " + TokenIzq.beginLine;
 		}
-		else if(tipoIdent1 == 46) //double
+		else if(tipoIdent1 == 48) //double
 		{
 			if(decComp.contains(tipoIdent2))
 				return " ";
 			else
 				return "Error: No se puede convertir " + TokenAsig.image + " a Decimal \r\nLinea: " + TokenIzq.beginLine;
 		}
-		else if(tipoIdent1 == 47) //char
+		else if(tipoIdent1 == 49) //char
 		{
 			/*variable segunda: cuenta cuantos datos se van a asignar al caracter: 
 				si a el caracter se le asigna mas de un dato (ej: 'a' + 'b') marca error 
@@ -127,7 +127,7 @@ class TokenAsignaciones
 				return "Error: No se puede asignar mas de un valor a un caracter \r\nLinea: " + TokenIzq.beginLine;
 			
 		}
-		else if(tipoIdent1 == 48) //string
+		else if(tipoIdent1 == 50) //string
 		{
 			if(strComp.contains(tipoIdent2))
 				return " ";
@@ -159,10 +159,4 @@ class TokenAsignaciones
 	}
 
  }
-  
-  
-  
-  
-  
-  
   

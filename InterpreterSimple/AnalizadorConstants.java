@@ -97,25 +97,29 @@ public interface AnalizadorConstants {
   /** RegularExpression Id. */
   int FIN = 44;
   /** RegularExpression Id. */
-  int INT = 45;
+  int CONFIGTOKENS = 45;
   /** RegularExpression Id. */
-  int DEC = 46;
+  int CONFIGTABLA = 46;
   /** RegularExpression Id. */
-  int CHR = 47;
+  int INT = 47;
   /** RegularExpression Id. */
-  int STR = 48;
+  int DEC = 48;
   /** RegularExpression Id. */
-  int NUMBER = 49;
+  int CHR = 49;
   /** RegularExpression Id. */
-  int IDENTIFIER = 50;
+  int STR = 50;
   /** RegularExpression Id. */
-  int DECIMAL = 51;
+  int NUMBER = 51;
   /** RegularExpression Id. */
-  int CADENA = 52;
+  int IDENTIFIER = 52;
   /** RegularExpression Id. */
-  int CARAC = 53;
+  int DECIMAL = 53;
   /** RegularExpression Id. */
-  int DOUBLEPOINT = 54;
+  int CADENA = 54;
+  /** RegularExpression Id. */
+  int CARAC = 55;
+  /** RegularExpression Id. */
+  int DOUBLEPOINT = 56;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -155,8 +159,8 @@ public interface AnalizadorConstants {
     "\"principal()\"",
     "\"programa\"",
     "\"si\"",
-    "\"o_si\"",
     "\"sino\"",
+    "\"o_si\"",
     "\"repetir\"",
     "\"alternativas\"",
     "\"opcion\"",
@@ -167,6 +171,8 @@ public interface AnalizadorConstants {
     "\"imprima\"",
     "\"lea\"",
     "\"fin\"",
+    "\"ImprimirTokens\"",
+    "\"ImprimirTablaAsignaciones\"",
     "\"numero\"",
     "\"decimal\"",
     "\"caracter\"",

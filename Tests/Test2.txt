@@ -1,0 +1,10 @@
+ImprimirTokens
+programa test:
+	principal():
+	
+	numero x;
+	x=6;
+	x="Error Sintactico";
+
+	fin
+fin

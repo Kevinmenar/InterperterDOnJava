@@ -1,0 +1,8 @@
+ImprimirTokens
+programa test:
+	principal():
+	
+	ErrorLexico
+
+	fin
+fin

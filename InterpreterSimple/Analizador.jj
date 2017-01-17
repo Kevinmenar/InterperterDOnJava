@@ -1,122 +1,172 @@
 PARSER_BEGIN(Analizador)
 import java.io.*;
+import java.util.Scanner;
+
 class Analizador 
 {
+	//Menu del sistema
+	static Scanner scanner = new Scanner(System.in); 
+    static int select = -1; 
+
+    public static boolean modeTableOn=false;
+    public static boolean modeTokenOn=false;
+
+	public static String Code="";
+	public static String TokenElem="";
+	public static String TablaDeAsignaciones="";
 	public static void main( String[] args )throws ParseException, Exception
 	{
 		try
-		{		
-     		Analizador analizador = new Analizador( System.in ) ;
-			analizador.Programa();
-			System.out.println("\tAnalizador ha terminado.");			
+		{
+			Analizador analizador = new Analizador( System.in ) ;
+			analizador.Config();
+			if(modeTableOn)
+			{
+				System.out.println("\tTabla asignaciones:\n");
+				System.out.println(TokenAsignaciones.tabla.toString());
+			}
+			else if(modeTokenOn)
+			{
+				System.out.println("\tTokens con cada una de las keys:\n");
+				System.out.println(TokenAsignaciones.tabla.toString());
+			}
+			
+	        System.out.println("\n-------------------------------------------\n\tResultado:\n"+Code+"\n-----------------------------------------\n");	
+			System.out.println();
+
+			System.out.println("\tAnalizador ha terminado.");
 		}
-		catch(ParseException e)
+		catch(Exception e)
 		{
 			System.out.println(e.getMessage());
 			System.out.println("\tAnalizador ha terminado.");
 		}
+		//generar un .java con el codigo que contiene el string llamado Code
+		
 	}
 }
+
 PARSER_END(Analizador)
 
 TOKEN : 
 { 
-	  <ASIGNACION : "=">  //1
-	| <PLUS : "+" >  //2
-	| <MINUS:"-"> //3
-	| <MULTIPLY:"*">//4 
-	| <DIVIDE:"/"> //5
-	| <INCR: "++" > //6
-	| <DECR: "--" > //7
+	  <ASIGNACION : "=">{Analizador.TokenElem=Analizador.TokenElem+"= | 1\n";}//1
+	| <PLUS : "+" >{Analizador.TokenElem=Analizador.TokenElem+"+ | 2\n";}//2
+	| <MINUS:"-">{Analizador.TokenElem=Analizador.TokenElem+"- | 3\n";}//3
+	| <MULTIPLY:"*">{Analizador.TokenElem=Analizador.TokenElem+"* | 4\n";}//4
+	| <DIVIDE:"/">{Analizador.TokenElem=Analizador.TokenElem+"/ | 5\n";}//5
+	| <INCR: "++" >{Analizador.TokenElem=Analizador.TokenElem+"++ | 6\n";}//6
+	| <DECR: "--" >{Analizador.TokenElem=Analizador.TokenElem+"-- | 7\n";}///{TokenElem+=" -- | 7";} //7
 	
 }
 
 TOKEN:
 {
-	  <EQ: "==" > //8
-	| <LE: "<=" > //9
-	| <MN: "<" > //10
-	| <GE: ">=" > //11
-	| <GR: ">" > //12
-	| <NE: "!=" > //13
-	| <OR: "||" > //14
-	| <AND: "&&"> //15
+	  <EQ: "==" >{Analizador.TokenElem=Analizador.TokenElem+"== | 8\n";} //8
+	| <LE: "<=" >{Analizador.TokenElem=Analizador.TokenElem+"<= | 9\n";} //9
+	| <MN: "<" >{Analizador.TokenElem=Analizador.TokenElem+"< | 10\n";} //10
+	| <GE: ">=" >{Analizador.TokenElem=Analizador.TokenElem+">= | 11\n";} //11
+	| <GR: ">" >{Analizador.TokenElem=Analizador.TokenElem+"> | 12\n";} //12
+	| <NE: "!=" >{Analizador.TokenElem=Analizador.TokenElem+"!= | 13\n";} //13
+	| <OR: "||" >{Analizador.TokenElem=Analizador.TokenElem+"|| | 14\n";} //14
+	| <AND: "&&">{Analizador.TokenElem=Analizador.TokenElem+"&& | 15\n";} //15
 }
 
 TOKEN:
 {
-      <LPAREN: "(" >//16 
-	| <RPAREN: ")" > //17
-	| <LBRACE: "{" > //18
-	| <RBRACE: "}" > //19
-	| <LBRACKET: "[" > //20
-	| <RBRACKET: "]" > //21
-	| <SEMICOLON: ";" > //22
-	| <COMMA: "," > //23
-	| <DOT: "." > //24
-	| <DOUBLECOMMA: "\""> //25
+      <LPAREN: "(" >{Analizador.TokenElem=Analizador.TokenElem+"( | 16\n";}//16
+	| <RPAREN: ")" >{Analizador.TokenElem=Analizador.TokenElem+") | 17\n";} //17
+	| <LBRACE: "{" >{Analizador.TokenElem=Analizador.TokenElem+"{ | 18\n";} //18
+	| <RBRACE: "}" >{Analizador.TokenElem=Analizador.TokenElem+"} | 19\n";} //19
+	| <LBRACKET: "[" >{Analizador.TokenElem=Analizador.TokenElem+"[ | 20\n";} //20
+	| <RBRACKET: "]" >{Analizador.TokenElem=Analizador.TokenElem+"] | 21\n";}//21
+	| <SEMICOLON: ";" >{Analizador.TokenElem=Analizador.TokenElem+"; | 22\n";}//22
+	| <COMMA: "," >{Analizador.TokenElem=Analizador.TokenElem+", | 23\n";} //23
+	| <DOT: "." >{Analizador.TokenElem=Analizador.TokenElem+". | 24\n";} //24
+	| <DOUBLECOMMA: "\"">{Analizador.TokenElem=Analizador.TokenElem+"\" | 25\n";} //25
 }
 
 TOKEN:
 {
-	  <PUBLIC: "publico"> //26
-	| <PRIVATE: "privado"> //27
-	| <STATIC: "estatico"> //28
-	| <VOID: "vacio"> //29
-	| <MAIN: "principal()"> //30
-	| <PROGRAMA: "programa" > // 31
-	| <IF: "si" > //32
-	| <ELSE:"o_si" > //33 
-	| <ELSEIF:"sino" > // 34
-	| <FOR:"repetir" > // 35
-	| <SWITCH:"alternativas" > // 36 
-	| <CASE:"opcion" > // 37
-	| <BREAK:"salir" > //38
-	| <DEFAUL:"defecto" > // 39
-	| <DO:"realice" > //40
-	| <WHILE:"ciclo" > //41
-	| <WRITE:"imprima" > // 42
-	| <READ:"lea" > //43
-	| <FIN:"fin"> //44
+	  <PUBLIC: "publico">{Analizador.TokenElem=Analizador.TokenElem+"publico | 26\n";} //26
+	| <PRIVATE: "privado">{Analizador.TokenElem=Analizador.TokenElem+"privado | 27\n";} //27
+	| <STATIC: "estatico">{Analizador.TokenElem=Analizador.TokenElem+"estatico | 28\n";} //28
+	| <VOID: "vacio">{Analizador.TokenElem=Analizador.TokenElem+"vacio | 29\n";} //29
+	| <MAIN: "principal()">{Analizador.TokenElem=Analizador.TokenElem+"principal() | 30\n";} //30
+	| <PROGRAMA: "programa" >{Analizador.TokenElem=Analizador.TokenElem+"programa | 31\n";} //31
+	| <IF: "si" >{Analizador.TokenElem=Analizador.TokenElem+"si | 32\n";} //32
+	| <ELSE:"sino" >{Analizador.TokenElem=Analizador.TokenElem+"sino | 33\n";} //33
+	| <ELSEIF:"o_si" >{Analizador.TokenElem=Analizador.TokenElem+"o_si | 34\n";} //34
+	| <FOR:"repetir" >{Analizador.TokenElem=Analizador.TokenElem+"repetir | 35\n";} //35
+	| <SWITCH:"alternativas" >{Analizador.TokenElem=Analizador.TokenElem+"alternativas | 36\n";} //36 
+	| <CASE:"opcion" > {Analizador.TokenElem=Analizador.TokenElem+"opcion | 37\n";}// 37
+	| <BREAK:"salir" >{Analizador.TokenElem=Analizador.TokenElem+"salir | 38\n";} //38
+	| <DEFAUL:"defecto" > {Analizador.TokenElem=Analizador.TokenElem+"defecto | 39\n";}// 39
+	| <DO:"realice" >{Analizador.TokenElem=Analizador.TokenElem+"realice | 40\n";}//40
+	| <WHILE:"ciclo" > {Analizador.TokenElem=Analizador.TokenElem+"ciclo | 41\n";}//41
+	| <WRITE:"imprima" >{Analizador.TokenElem=Analizador.TokenElem+"imprima | 42\n";}// 42
+	| <READ:"lea" >{Analizador.TokenElem=Analizador.TokenElem+"lea | 43\n";} //43
+	| <FIN:"fin"> {Analizador.TokenElem=Analizador.TokenElem+"fin | 44\n";} //44
+	| <CONFIGTOKENS:"ImprimirTokens">{Analizador.modeTableOn=true;Analizador.TokenElem=Analizador.TokenElem+"ImprimirTokens | 45\n";}//45
+	| <CONFIGTABLA:"ImprimirTablaAsignaciones">{Analizador.modeTokenOn=true;Analizador.TokenElem=Analizador.TokenElem+"ImprimirTablaAsignaciones | 46\n";}//46
 }
 
 TOKEN:
 {
-	  <INT:"numero">//45
-	| <DEC: "decimal">//46 
-	| <CHR: "caracter"> //47
-	| <STR: "cadena">//48
-	| <NUMBER : (["0"-"9"])+> // 49  
-	| <IDENTIFIER : ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9","_"])*>  //50
-	| <DECIMAL : (["0"-"9"])+["."](["0"-"9"])+ > //51
-	| <CADENA : <DOUBLECOMMA>["a"-"z","A"-"Z","0"-"9"," "](["a"-"z","A"-"Z","0"-"9"," ",":",";","."])*<DOUBLECOMMA>> //52
-	| <CARAC : "'"["a"-"z","A"-"Z","0"-"9"]"'" >//53 
-	| <DOUBLEPOINT : ":">//54
+	  <INT:"numero"> {Analizador.TokenElem=Analizador.TokenElem+"numero | 47\n";}//47 44
+	| <DEC: "decimal"> {Analizador.TokenElem=Analizador.TokenElem+"decimal | 48\n";}//48 45
+	| <CHR: "caracter">  {Analizador.TokenElem=Analizador.TokenElem+"caracter | 49\n";}//49 46
+	| <STR: "cadena"> {Analizador.TokenElem=Analizador.TokenElem+"cadena | 50\n";}//50 47
+	| <NUMBER : (["0"-"9"])+> {Analizador.TokenElem=Analizador.TokenElem+"ERNumber | 51\n";} // 51 48  
+	| <IDENTIFIER : ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9","_"])*> {Analizador.TokenElem=Analizador.TokenElem+"ERIdentificador | 52\n";}  //52 49
+	| <DECIMAL : (["0"-"9"])+["."](["0"-"9"])+ > {Analizador.TokenElem=Analizador.TokenElem+"ERDecimal | 53\n";} //53 50
+	| <CADENA : <DOUBLECOMMA>["a"-"z","A"-"Z","0"-"9"," "](["a"-"z","A"-"Z","0"-"9"," ",":",";","."])*<DOUBLECOMMA>> {Analizador.TokenElem=Analizador.TokenElem+"ERCadena | 54\n";} //54 51
+	| <CARAC : "'"["a"-"z","A"-"Z","0"-"9"]"'" > {Analizador.TokenElem=Analizador.TokenElem+"ERCaracter | 55\n";}//55 52
+	| <DOUBLEPOINT : ":"> {Analizador.TokenElem=Analizador.TokenElem+": | 56\n";}//56 53
 }
-
 
 SKIP : 
 { 
-	" "| "\r" | "\n" |  "\r\n" | "\t" //55
+	  " "{Analizador.TokenElem=Analizador.TokenElem+"espacio | 57\n";}
+	| "\r" {Analizador.TokenElem=Analizador.TokenElem+"CarriageReturn | 58\n";}
+	| "\n" {Analizador.TokenElem=Analizador.TokenElem+"NuevaLinea | 59\n";}
+	| "\r\n" {Analizador.TokenElem=Analizador.TokenElem+"r n | 60\n";}
+	| "\t"{Analizador.TokenElem=Analizador.TokenElem+"Tab | 61\n";}
 }
 
-void Programa() :
-{}
+void Config():
+{	
+}
 {
-	<PROGRAMA><IDENTIFIER><DOUBLEPOINT>Sector()<FIN><EOF>	
+	<CONFIGTOKENS> Programa() | <CONFIGTABLA> Programa() | Programa()	
+}
+
+void Programa():
+{
+	//System.out.println("Programa");
+	Token identificador;
+}
+{
+	<PROGRAMA>{Code+="\nClass ";}identificador=<IDENTIFIER>{Code+=identificador.toString();}<DOUBLEPOINT>{Code+="\n{\n";}Sector()<FIN>{Code+="\n}\n";}<EOF>	
 }
 
 void Sector():
-{}
+{
+	
+}
 {
 	LOOKAHEAD(2)VariablesGlobales() | Principal()
 }
 
-
 void VariablesGlobales():
-{}
 {
-	(<PRIVATE>|<PUBLIC>)(<INT>|<DEC>|<STR>|<CHR>) <IDENTIFIER>(<COMMA><IDENTIFIER>)* <SEMICOLON> Sector()
+	Token identificador;
+}
+{
+	(<PRIVATE>{Code+="private ";}|<PUBLIC>{Code+="public ";})
+	(<INT>{Code+="int ";}|<DEC>{Code+="float ";}|<STR>{Code+="String ";}|<CHR>{Code+="char ";})
+	identificador=<IDENTIFIER>{Code+=identificador.toString();}
+	(<COMMA>{Code+=",";}<IDENTIFIER>{Code+="identGeneric";})* <SEMICOLON>{Code+=";\n";} Sector()
 }
 
 void Principal():
@@ -124,9 +174,9 @@ void Principal():
 	TokenAsignaciones.SetTables();	
 }
 {
-	<MAIN><DOUBLEPOINT>
+	<MAIN>{Code+="public static void main( String[] args )";}<DOUBLEPOINT>{Code+="\n{\n";}
 	Sentencias()
-	<FIN> 	
+	<FIN>{Code+="\n}\n";}	
 }
 
 
@@ -144,17 +194,19 @@ void VariablesLocales():
 	var = <IDENTIFIER> 
 	{		
 		TokenAsignaciones.InsertarSimbolo(var, td);
+		{Code+=var.toString();}
 	} 
 	[VariablesAsignacion(var)]
 	(
-		<COMMA>
+		<COMMA>{Code+=",";}
 		var = <IDENTIFIER> 
 		{		
 			TokenAsignaciones.InsertarSimbolo(var, td);
+			Code+="id";
 		} 
 		[VariablesAsignacion(var)]
 	)*	
-	<SEMICOLON> 
+	<SEMICOLON> {Code+=";\n";}
 )
 	(VS())
 }
@@ -167,15 +219,16 @@ void VariablesAsignacion(Token v1):
 	boolean imp = false;
 }
 {
-	<ASIGNACION>
+	<ASIGNACION>{Code+="=";}
 	(TiposAsignaciones())
 	  {  
+
 		v2 = token;
 		res = TokenAsignaciones.checkAsing(v1, v2);
 		
 		if(res != " ")
 		{
-			System.out.println(res);
+			//System.out.println(res);
 			imp = true;
 		}
 	  }
@@ -187,7 +240,7 @@ void VariablesAsignacion(Token v1):
 		
 		if(res != " " && !imp)
 		{
-			System.out.println(res);
+			//System.out.println(res);
 		}
 	  })*
 }
@@ -206,9 +259,9 @@ void Sentencias():
     | SentenciaIf() 	
 	| SentenciaFor()
 	| SentenciaDo()	
-	| LOOKAHEAD(2)SentenciaAsignacion()<SEMICOLON>{TokenAsignaciones.segunda = 0;}
+	| LOOKAHEAD(2)SentenciaAsignacion()<SEMICOLON>{TokenAsignaciones.segunda = 0;Code+=";\n";}
 	| SentenciaWrite()
-	| SentenciaRead()<SEMICOLON>
+	| SentenciaRead()<SEMICOLON>{Code+=";\n";}
 	| SentenciaSwitch()
 	)*
 }
@@ -217,19 +270,20 @@ void Sentencias():
 void SentenciaIf():
 {}
 {
-	<IF> ComparacionesAnidadas()  <DOUBLEPOINT> Sentencias() <FIN> (Sino())* 
+	<IF>{Code+="if(";} ComparacionesAnidadas()  <DOUBLEPOINT>{Code+=")\n\t{\n";} Sentencias() <FIN>{Code+="\n}\n";} (Sino())* 
+
 }
 
 void Sino():
 {}
 {
-	<ELSE><DOUBLEPOINT> Sentencias() <FIN> | <ELSEIF>  ComparacionesAnidadas()  <DOUBLEPOINT> Sentencias() <FIN>
+	<ELSE>{Code+="else";}<DOUBLEPOINT>{Code+="\n{\n";} Sentencias() <FIN>{Code+="\n}\n";} | <ELSEIF>{Code+="else";Code+=" ";Code+="if(";}  ComparacionesAnidadas()  <DOUBLEPOINT>{Code+=")\n{\n";}  Sentencias() <FIN>{Code+="}";} 
 }
 
 void ComparacionesAnidadas():
 {}
 {
-	  Comparaciones() ([(<AND>|<OR>)] Comparaciones())*
+	  Comparaciones() ([(<AND>{Code+="&&";}|<OR>{Code+="||";})] Comparaciones())*
 }
 
 
@@ -240,36 +294,54 @@ void Comparaciones():
 }
 
 void Valor():
-{}
 {
-	LOOKAHEAD(2) (<IDENTIFIER> | <NUMBER>) | Expresion()
+	Token identificador;
+}
+{
+	LOOKAHEAD(2) 
+	(
+		identificador=<IDENTIFIER>{Code+=identificador.toString();}| 
+		identificador=<NUMBER>{Code+=identificador.toString();}
+	) 
+	| Expresion()
 }
 
 void Expresion():
-{}
 {
-    LOOKAHEAD(2)(<NUMBER> | <IDENTIFIER>)
-	|(<IDENTIFIER>|<NUMBER>) OpAritmetico() (<IDENTIFIER>|<NUMBER>) 
+	Token identificador;
+}
+{
+    LOOKAHEAD(2)(identificador=<NUMBER>{Code+=identificador.toString();} | identificador=<IDENTIFIER>){Code+=identificador.toString();}|
+    (
+    	identificador=<IDENTIFIER>{Code+=identificador.toString();}|
+    	identificador=<NUMBER>{Code+=identificador.toString();}
+    ) 
+    OpAritmetico()
+    (
+    	identificador=<IDENTIFIER>{Code+=identificador.toString();}|
+    	identificador=<NUMBER>{Code+=identificador.toString();}
+    ) 
 }
 
 void Operadores():
 {}
 {
-	    <EQ> 
-	  | <LE> 
-	  | <GE> 
-	  | <NE> 
-	  | <GR> 
-	  | <MN> 
+	    <EQ> {Code+="==";}
+	  | <LE> {Code+="<=";}
+	  | <GE> {Code+="<";}
+	  | <NE> {Code+="!=";}
+	  | <GR> {Code+=">";}
+	  | <MN> {Code+=">=";}
 }
+
 
 int OpAritmetico():
 {}
 {
-	  (<PLUS> {return 1;})
-	| (<MINUS> {return 1;})
-	| (<MULTIPLY> {return 1;})
-	| (<DIVIDE> {return 1;})
+	  (<PLUS> {Code+="+";return 1;})
+	| (<MINUS> {Code+="-";return 1;})
+	| (<MULTIPLY> {Code+="*";return 1;})
+	| (<DIVIDE> {Code+="/";return 1;})
 	| ({return 0;})
 	
 	{return 0;}
@@ -278,17 +350,18 @@ int OpAritmetico():
 void TiposDatos():
 {}
 {
-	 <INT>
-	|<DEC>
-	|<STR>
-	|<CHR>
+
+	 <INT>{Code+="int ";}
+	|<DEC>{Code+="float ";}
+	|<STR>{Code+="String ";}
+	|<CHR>{Code+="char ";}
 }
 
 //Sentencia FOR
 void SentenciaFor():
 {}
 {
-	<FOR> (DeclaracionUnaVariable()|SentenciaAsignacion())<SEMICOLON> Comparaciones() <SEMICOLON> SentenciaAsignacion() <DOUBLEPOINT> Sentencias() <FIN> 
+	<FOR>{Code+="for(";} (DeclaracionUnaVariable()|SentenciaAsignacion())<SEMICOLON>{Code+=";";} Comparaciones() <SEMICOLON>{Code+=";";}  SentenciaAsignacion() <DOUBLEPOINT>{Code+=")\n{\n";}  Sentencias() <FIN>{Code+="}";}  
 }
 
 void DeclaracionUnaVariable():
@@ -304,6 +377,7 @@ void DeclaracionUnaVariable():
 	var = <IDENTIFIER> 
 	{		
 		TokenAsignaciones.InsertarSimbolo(var, td);
+		System.out.print(var.toString());
 	} 
 	[VariablesAsignacion(var)]		
 }
@@ -311,13 +385,13 @@ void DeclaracionUnaVariable():
 void SentenciaDo():
 {}
 {
-	<DO> <DOUBLEPOINT>Sentencias() <FIN> <WHILE>  Comparaciones() <FIN> | SentenciaWhile()
+	<DO>{Code+="do";} <DOUBLEPOINT>{Code+="\n{\n";}Sentencias() <FIN>{Code+="\n}\n";} <WHILE>{Code+="\nwhile(";}  Comparaciones() <FIN>{Code+=")\n";} | SentenciaWhile()
 }
 
 void SentenciaWhile():
 {}
 {
-	<WHILE> Comparaciones()  <DOUBLEPOINT> Sentencias() <FIN>
+	<WHILE>{Code+="while(";} Comparaciones()  <DOUBLEPOINT>{Code+=")\n{\n";} Sentencias() <FIN>{Code+="\n}\n";}
 }
 
 void SentenciaAsignacion():
@@ -330,13 +404,12 @@ void SentenciaAsignacion():
 	boolean imp = false;
 }
 {
-  v1 = <IDENTIFIER> 
-  (<ASIGNACION>
+  v1 = <IDENTIFIER> {Code+=v1.toString();}
+  (<ASIGNACION>{Code+="=";}
   (TiposAsignaciones())
   {  
     v2 = token;
 	res = TokenAsignaciones.checkAsing(v1, v2);
-	
 	if(res != " ")
 	{
 		System.out.println(res);
@@ -355,7 +428,7 @@ void SentenciaAsignacion():
 	}
   })*  
   |
-  (<INCR>|<DECR>)
+  (<INCR>{Code+="++";}|<DECR>{Code+="--";})
   {  
 	res = TokenAsignaciones.checkVariable(v1);
 	
@@ -367,20 +440,22 @@ void SentenciaAsignacion():
 }
 
 void TiposAsignaciones():
-{}
 {
-	  <IDENTIFIER> 
-	| <NUMBER> 
-	| <DECIMAL> 
-	| <CADENA> 
-	| <CARAC>
+	Token elem;
+}
+{
+	 elem=<IDENTIFIER> {Code+=elem.toString();}
+	| elem=<NUMBER> {Code+=elem.toString();}
+	| elem=<DECIMAL> {Code+=elem.toString();}
+	| elem=<CADENA> {Code+=elem.toString();}
+	| elem=<CARAC> {Code+=elem.toString();}
 }
 
 //Sentencia WRITE
 void SentenciaWrite():
 {}
 {
-	<WRITE> (Expresion()(<PLUS><CADENA>)*|<CADENA>(<PLUS>Expresion())*)*  <SEMICOLON> 
+	<WRITE>{Code+="System.out.println(";} (Expresion()(<PLUS><CADENA>)*|<CADENA>(<PLUS>Expresion())*)*  <SEMICOLON> {Code+=");";}
 }
 
 //Sentencia READ
@@ -391,8 +466,24 @@ void SentenciaRead():
 }
 
 void SentenciaSwitch():
-{}
 {
-	<SWITCH><IDENTIFIER><DOUBLEPOINT>(<CASE>(<IDENTIFIER>|<CADENA>|<CARAC>|<NUMBER>|<DECIMAL>)<DOUBLEPOINT>(SentenciaAsignacion()<SEMICOLON>)+ <BREAK><SEMICOLON>)+[<DEFAUL><DOUBLEPOINT>(SentenciaAsignacion()<SEMICOLON>)<BREAK><SEMICOLON>]<FIN>
+	Token elem;
+}
+{
+	<SWITCH>{Code+="switch(";}elem=<IDENTIFIER>{Code+=elem.toString();}<DOUBLEPOINT>{Code+=")\n{\n";}
+	(<CASE>{Code+="case";Code+=" ";}(
+			elem=<IDENTIFIER>{Code+=elem.toString();}|
+			elem=<CADENA>{Code+=elem.toString();}|
+			elem=<CARAC>{Code+=elem.toString();}|
+			elem=<NUMBER>{Code+=elem.toString();}|
+			elem=<DECIMAL>{Code+=elem.toString();}
+			)
+		<DOUBLEPOINT>{Code+=":\n";}
+		(SentenciaAsignacion()
+			<SEMICOLON>{Code+=";\n";}
+		)+ 
+		<BREAK>{Code+="break";}
+		<SEMICOLON>{Code+=";\n";}
+	)+[<DEFAUL>{Code+="default";}<DOUBLEPOINT>{Code+=":\n";}(SentenciaAsignacion()<SEMICOLON>{Code+=";\n";})<BREAK>{Code+="break";}<SEMICOLON>{Code+=";\n";}]<FIN>{Code+="\n}\n";}
 }
 
